@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/notes",
+  baseURL: "https://swiftnotes-production.up.railway.app/api/notes",
 });
 
 export const getNotes = () => API.get("/");
