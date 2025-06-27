@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../auth";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +10,17 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for success message from registration
+  useEffect(() => {
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,10 +32,34 @@ const Login = () => {
     setErrorMessage("");
 
     try {
-      await login(formData.email, formData.password);
+      // Get the API URL from environment or use default
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+      console.log("Using API URL for login:", apiUrl);
+      
+      // Make direct API call
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email: formData.email,
+        password: formData.password
+      });
+      
+      // Save token and user data
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      // Navigate to home page
       navigate("/");
     } catch (error) {
-      setErrorMessage(error.response?.data?.msg || "Login failed. Please check your credentials.");
+      console.error("Login error:", error);
+      
+      // Extract the error message
+      let message = "Login failed. Please check your credentials.";
+      if (error.response && error.response.data && error.response.data.msg) {
+        message = error.response.data.msg;
+      } else if (error.message) {
+        message = `Error: ${error.message}`;
+      }
+      
+      setErrorMessage(message);
     } finally {
       setIsLoading(false);
     }
@@ -34,6 +68,12 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-6 mt-10">
       <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Log In</h2>
+      
+      {successMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {successMessage}
+        </div>
+      )}
       
       {errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

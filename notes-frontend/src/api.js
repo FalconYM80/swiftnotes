@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// For debugging
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+console.log("Using API URL:", API_URL);
+
 const API = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: API_URL,
 });
 
 // Add token to requests if available
@@ -13,6 +17,17 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// Add response interceptor for debugging
+API.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.error("API Error:", error.response || error.message || error);
+    return Promise.reject(error);
+  }
+);
+
 // Note operations
 export const getNotes = () => API.get("/notes");
 export const createNote = (note) => API.post("/notes", note);
@@ -21,4 +36,7 @@ export const deleteNote = (id) => API.delete(`/notes/${id}`);
 
 // Auth operations
 export const login = (formData) => API.post("/auth/login", formData);
-export const register = (formData) => API.post("/auth/register", formData);
+export const register = (formData) => {
+  console.log("Register API call with data:", formData);
+  return API.post("/auth/register", formData);
+};

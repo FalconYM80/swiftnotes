@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../auth";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -31,11 +32,31 @@ const Register = () => {
     setErrorMessage("");
 
     try {
-      await register(formData.name, formData.email, formData.password);
+      // Get the API URL from environment or use default
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+      console.log("Using API URL for direct registration:", apiUrl);
+      
+      // Make direct API call instead of using the auth context
+      await axios.post(`${apiUrl}/auth/register`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      });
+      
       // Redirect to login after successful registration
       navigate("/login", { state: { message: "Registration successful! Please log in." } });
     } catch (error) {
-      setErrorMessage(error.response?.data?.msg || "Registration failed. Please try again.");
+      console.error("Registration error:", error);
+      
+      // Extract the error message
+      let message = "Registration failed. Please try again.";
+      if (error.response && error.response.data && error.response.data.msg) {
+        message = error.response.data.msg;
+      } else if (error.message) {
+        message = `Error: ${error.message}`;
+      }
+      
+      setErrorMessage(message);
     } finally {
       setIsLoading(false);
     }

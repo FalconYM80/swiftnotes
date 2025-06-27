@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       return data;
     } catch (err) {
-      setError(err.response?.data?.msg || "Login failed");
+      console.error("Login error:", err);
+      setError(err.response?.data?.msg || `Login failed: ${err.message}`);
       throw err;
     }
   };
@@ -44,10 +45,13 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       setError(null);
-      await apiRegister({ name, email, password });
-      return true;
+      console.log("Registering user:", { name, email });
+      const response = await apiRegister({ name, email, password });
+      console.log("Registration response:", response);
+      return response;
     } catch (err) {
-      setError(err.response?.data?.msg || "Registration failed");
+      console.error("Registration error:", err);
+      setError(err.response?.data?.msg || `Registration failed: ${err.message}`);
       throw err;
     }
   };

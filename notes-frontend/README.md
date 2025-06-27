@@ -104,3 +104,18 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Troubleshooting
+
+If you experience issues with registration or login:
+
+1. Make sure your backend server is running and accessible
+2. Check that your `.env` file has the correct `REACT_APP_API_URL` pointing to your Railway backend
+3. Visit `/api-test` route in the app to test API connectivity directly
+4. Check browser console for any error messages
+5. Ensure CORS is properly configured on your backend
+
+Common issues:
+- "Registration failed" - Check if the email is already registered
+- Network errors - Verify the API URL is correct and the backend is running
+- CORS errors - Make sure your backend allows requests from your frontend domain
