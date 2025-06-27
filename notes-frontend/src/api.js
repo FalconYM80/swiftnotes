@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// For debugging
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
-console.log("Using API URL:", API_URL);
+// Hardcoded API URL for Railway
+const API_URL = "https://swiftnotes-production.up.railway.app/api";
+console.log("Using hardcoded API URL:", API_URL);
 
 const API = axios.create({
   baseURL: API_URL,

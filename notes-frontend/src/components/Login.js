@@ -32,9 +32,9 @@ const Login = () => {
     setErrorMessage("");
 
     try {
-      // Get the API URL from environment or use default
-      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
-      console.log("Using API URL for login:", apiUrl);
+      // Direct API URL for Railway
+      const apiUrl = "https://swiftnotes-production.up.railway.app/api";
+      console.log("Using hardcoded API URL for login:", apiUrl);
       
       // Make direct API call
       const response = await axios.post(`${apiUrl}/auth/login`, {

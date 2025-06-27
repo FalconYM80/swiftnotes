@@ -32,9 +32,9 @@ const Register = () => {
     setErrorMessage("");
 
     try {
-      // Get the API URL from environment or use default
-      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
-      console.log("Using API URL for direct registration:", apiUrl);
+      // Direct API URL for Railway
+      const apiUrl = "https://swiftnotes-production.up.railway.app/api";
+      console.log("Using hardcoded API URL for registration:", apiUrl);
       
       // Make direct API call instead of using the auth context
       await axios.post(`${apiUrl}/auth/register`, {
