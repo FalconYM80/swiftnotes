@@ -1,3 +1,39 @@
+# Notes App Frontend
+
+This is the frontend for the Notes App, built with React.
+
+## Setup
+
+1. Install dependencies:
+```
+npm install
+```
+
+2. Create a `.env` file in the root directory with the following content:
+```
+REACT_APP_API_URL=https://your-railway-backend-url.railway.app/api
+```
+Replace `https://your-railway-backend-url.railway.app` with your actual Railway backend URL.
+
+3. Start the development server:
+```
+npm start
+```
+
+## Authentication
+
+The app includes a complete authentication system:
+- User registration
+- User login
+- Protected routes
+- JWT token management
+
+## Features
+
+- Create, read, update, and delete notes
+- Notes are associated with the authenticated user
+- Responsive design with Tailwind CSS
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

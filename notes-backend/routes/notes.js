@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 const {
   getNotes,
   getNote,
@@ -8,10 +9,11 @@ const {
   deleteNote
 } = require("../controllers/notesController");
 
-router.get("/", getNotes);
-router.get("/:id", getNote);
-router.post("/", createNote);
-router.put("/:id", updateNote);
-router.delete("/:id", deleteNote);
+// Protected routes - require authentication
+router.get("/", auth, getNotes);
+router.get("/:id", auth, getNote);
+router.post("/", auth, createNote);
+router.put("/:id", auth, updateNote);
+router.delete("/:id", auth, deleteNote);
 
 module.exports = router;
