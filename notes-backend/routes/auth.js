@@ -29,19 +29,37 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Login request:", email, password);
+    console.log("Login attempt for:", email);
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!user) {
+      console.log("User not found");
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!isMatch) {
+      console.log("Password mismatch");
+      return res.status(400).json({ msg: "Invalid credentials" });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.log("JWT_SECRET is undefined");
+      return res.status(500).json({ msg: "JWT_SECRET not configured" });
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (err) {
-    console.error("Login error:", err.message); // Add this
+    console.error("Login error:", err);
     res.status(500).json({ msg: "Server error" });
   }
 });
